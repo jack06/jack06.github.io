@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>  
+            body{  
+                margin:0;  
+            }  
+         
+            #rain{                  <!-- rain为画布的id -->  
+                display:block;      <!-- 这样设置后，可消除页面的滑动条-->  
+                background:"#000";  <!-- 画布背景色为黑色 -->  
+            }  
+        </style>  
+</head>
+
+<body>
+ <!-- 创建画布 -->  
+        <canvas id="rain"></canvas>  
+        <script>  
+            var canvas = document.getElementById("rain");   <!-- 获取画布的对象 -->  
+            var w = window.innerWidth;                      <!-- 获取浏览器窗口的宽度 -->  
+            var h = window.innerHeight;                     <!-- 获取浏览器窗口的高度 -->  
+            canvas.width = w;                               <!-- 设置画布的宽度为浏览器窗口的宽度 -->       
+            canvas.height = h;                              <!-- 设置画布的高度为浏览器窗口的高度 -->  
+              
+            /*当浏览器窗口大小发生变化时，自动调整canvas的宽高*/  
+            window.onresize = function(){                   <!-- 此函数，当浏览器窗口的大小发生改变时触发 -->  
+                w = window.innerWidth;                      <!-- 作用为重新设置画布的宽和高 -->  
+                h = window.innerHeight;  
+                canvas.width = w;  
+                canvas.height = h;  
+            }  
+              
+            var canvasContent = canvas.getContext("2d");    <!-- 获取画布中真正用来绘画的地方，2d为2d绘图 -->  
+          
+              
+            function Rain(){};                              <!-- 声明一个类，作用雨滴 -->  
+            function random(min,max){                       <!-- 产生随机数 -->  
+                return Math.random()*(max-min)+min;  
+            }  
+              
+            Rain.prototype={                      
+            <!-- 设置雨滴的属性 -->  
+                init:function(){  
+                    this.x = random(0,w);                   <!-- 雨滴的x坐标 -->  
+                    this.y = 0;                             <!-- 雨滴的y坐标 -->  
+                    this.v = random(4,5);                   <!-- 雨滴的下降速度 -->  
+                    this.h = random(0.8*h,0.9*h);           <!-- 雨滴的落地高度，即停止下落的高度 -->  
+                    this.r = 1;                             <!-- 雨滴落地后涟漪的初始半径 -->  
+                    this.vr = random(0,1);                  <!-- 涟漪绽开的速度 -->  
+                    this.ro = 20;                           <!-- 当半径变化到ro时，开始绽放外层涟漪 -->  
+                    this.a = 1;                             <!-- 涟漪的透明度 -->  
+                    this.va = 0.96;                         <!-- 透明度的变化速度 -->  
+                },  
+                <!-- 雨滴的绘制 -->  
+                draw:function(){                              
+                    if(this.y < this.h){                 <!-- 若雨滴未落地 -->  
+                        canvasContent.fillStyle="#fff";     <!-- 选取白色画笔 -->  
+                        canvasContent.fillRect(this.x,this.y,2,10);<!-- 画矩形：x坐标，y坐标，长，宽 -->  
+                    }  
+                    else{                                   <!-- 若落地了 -->  
+                        if(this.r < this.ro){                <!-- 画空心圆形 -->  
+                            canvasContent.strokeStyle="rgba(255,255,255,"+this.a+")";<!-- 画笔选择 -->  
+                            canvasContent.beginPath();                  <!-- 提起画笔 -->  
+                            canvasContent.arc(this.x,this.y,this.r,0,Math.PI*2);<!-- 怎么画圆形 -->  
+                            canvasContent.stroke();                     <!-- 下笔画 -->  
+                        }  
+                        else{   <!-- 若圆形的半径超过ro，则画rgba(105,105,105,"+this.a+")的圆 -->  
+                            canvasContent.strokeStyle="rgba(105,105,105,"+this.a+")";  
+                            canvasContent.beginPath();  
+                            canvasContent.arc(this.x,this.y,this.r,0,Math.PI*2);  
+                            canvasContent.stroke();  
+                        }  
+                          
+                    }  
+                      
+                },  
+                <!--雨滴的移动-->  
+                move:function(){  
+                    if(this.y < this.h){ <!--若雨滴未落地-->  
+                        this.y+=this.v;     <!--雨滴继续下降 -->  
+                    }  
+                    else{                   <!--若雨滴落地 -->  
+                        if(this.a >  0.02){      <!-- 若透明度大于0.02-->  
+                            this.r+=this.vr;    <!-- 空心圆（涟漪）的半径开始增大-->  
+                            this.a *=this.va;   <!-- 透明度开始变小-->  
+                        }  
+                        else{                   <!-- 若透明度已经小于0.02-->  
+                            this.init();        <!-- 重置雨滴所有属性，即回到天上重新掉落-->  
+                        }  
+                    }  
+                    this.draw();                <!-- 雨滴移动过后，要重新绘制一次-->  
+                }  
+            }  
+              
+            <!-- 逻辑代码-->  
+            var rainArray=[];       <!--用一个列表记录所有雨滴 -->  
+            function createRain(){  <!--创建雨滴函数 -->  
+                var rain = new Rain();<!-- 创建雨滴对象-->  
+                rain.init();            <!--配置雨滴的属性 -->  
+                rain.draw();            <!--绘制雨滴（开始掉落） -->  
+                rainArray.push(rain);   <!-- 把新创建的雨滴加入到列表中-->  
+            }  
+              
+            function moveRain(){        <!--移动雨滴 -->  
+                canvasContent.fillStyle="rgba(0,0,0,0.01)";<!--绘制透明度0.01的黑色布-->  
+                canvasContent.fillRect(0,0,w,h);            <!--用于覆盖画布(16ms覆盖一次)，使画布上的内容颜色变淡 -->  
+                for(var k=0;k<rainArray.length;k++){     <!-- 遍历雨滴列表，使每个雨滴移动-->  
+                    rainArray[k].move();  
+                }  
+            }  
+              
+            for(var k=0;k<30;k++){               <!--共创建30个雨滴 -->  
+                setTimeout(createRain,200*k);   <!--每隔一段时间创建一个雨滴 -->  
+            }  
+              
+            function run(){  
+                moveRain();  
+                setTimeout(run,1000/60);<!-- 每16ms刷新画布（移动雨滴）-->  
+            }  
+            run();  
+        </script>  
+</body>
+</html>
