@@ -12,11 +12,14 @@
                 display:block;      <!-- 这样设置后，可消除页面的滑动条-->  
                 background:"#000";  <!-- 画布背景色为黑色 -->  
             }  
-        </style>  
+			h1{
+				background-color:red;}
+  </style>  
 </head>
 
 <body>
  <!-- 创建画布 -->  
+ 		<h1 align="center">Welcome to my blog</h1>
         <canvas id="rain"></canvas>  
         <script>  
             var canvas = document.getElementById("rain");   <!-- 获取画布的对象 -->  
@@ -121,6 +124,8 @@
                 setTimeout(run,1000/60);<!-- 每16ms刷新画布（移动雨滴）-->  
             }  
             run();  
+				
         </script>  
+       
 </body>
 </html>
