@@ -1,131 +1,143 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>无标题文档</title>
-<style>  
-            body{  
-                margin:0;  
-            }  
-         
-            #rain{                  <!-- rain为画布的id -->  
-                display:block;      <!-- 这样设置后，可消除页面的滑动条-->  
-                background:"#000";  <!-- 画布背景色为黑色 -->  
-            }  
-			h1{
-				background-color:red;}
-  </style>  
-</head>
+<!doctype html>
+<html>
 
+	<head>
+		<meta charset="utf-8">
+		<title>曾洋的个人简历</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.css" rel="stylesheet" />
+		<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+		<link href="css/font-awesome.css" rel="stylesheet">
+		<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+		<!-- //Style Sheets -->
+		<!--web-fonts-->
+		<link href="http://fonts.googleapis.com/css?family=Josefin+Sans:100,300,400,600,700" rel="stylesheet">
+		<link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+	</head>
+
+	<body>
+		<!-- <h3 style="color: #EC971F;">ZENG YANG</h3>
+		<div style="color: #8B0000;">
+		姓名: 曾洋<br />
+		年龄：19<br />
+		爱好：看书<br />
+		毕业院校:广东南方IT<br /> -->
+		<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>myresume</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+    <![endif]-->
+ </head>
 <body>
- <!-- 创建画布 -->  
- 		<h1 align="center">Welcome to my blog</h1>
-        <canvas id="rain"></canvas>  
-        <script>  
-            var canvas = document.getElementById("rain");   <!-- 获取画布的对象 -->  
-            var w = window.innerWidth;                      <!-- 获取浏览器窗口的宽度 -->  
-            var h = window.innerHeight;                     <!-- 获取浏览器窗口的高度 -->  
-            canvas.width = w;                               <!-- 设置画布的宽度为浏览器窗口的宽度 -->       
-            canvas.height = h;                              <!-- 设置画布的高度为浏览器窗口的高度 -->  
-              
-            /*当浏览器窗口大小发生变化时，自动调整canvas的宽高*/  
-            window.onresize = function(){                   <!-- 此函数，当浏览器窗口的大小发生改变时触发 -->  
-                w = window.innerWidth;                      <!-- 作用为重新设置画布的宽和高 -->  
-                h = window.innerHeight;  
-                canvas.width = w;  
-                canvas.height = h;  
-            }  
-              
-            var canvasContent = canvas.getContext("2d");    <!-- 获取画布中真正用来绘画的地方，2d为2d绘图 -->  
-          
-              
-            function Rain(){};                              <!-- 声明一个类，作用雨滴 -->  
-            function random(min,max){                       <!-- 产生随机数 -->  
-                return Math.random()*(max-min)+min;  
-            }  
-              
-            Rain.prototype={                      
-            <!-- 设置雨滴的属性 -->  
-                init:function(){  
-                    this.x = random(0,w);                   <!-- 雨滴的x坐标 -->  
-                    this.y = 0;                             <!-- 雨滴的y坐标 -->  
-                    this.v = random(4,5);                   <!-- 雨滴的下降速度 -->  
-                    this.h = random(0.8*h,0.9*h);           <!-- 雨滴的落地高度，即停止下落的高度 -->  
-                    this.r = 1;                             <!-- 雨滴落地后涟漪的初始半径 -->  
-                    this.vr = random(0,1);                  <!-- 涟漪绽开的速度 -->  
-                    this.ro = 20;                           <!-- 当半径变化到ro时，开始绽放外层涟漪 -->  
-                    this.a = 1;                             <!-- 涟漪的透明度 -->  
-                    this.va = 0.96;                         <!-- 透明度的变化速度 -->  
-                },  
-                <!-- 雨滴的绘制 -->  
-                draw:function(){                              
-                    if(this.y < this.h){                 <!-- 若雨滴未落地 -->  
-                        canvasContent.fillStyle="#fff";     <!-- 选取白色画笔 -->  
-                        canvasContent.fillRect(this.x,this.y,2,10);<!-- 画矩形：x坐标，y坐标，长，宽 -->  
-                    }  
-                    else{                                   <!-- 若落地了 -->  
-                        if(this.r < this.ro){                <!-- 画空心圆形 -->  
-                            canvasContent.strokeStyle="rgba(255,255,255,"+this.a+")";<!-- 画笔选择 -->  
-                            canvasContent.beginPath();                  <!-- 提起画笔 -->  
-                            canvasContent.arc(this.x,this.y,this.r,0,Math.PI*2);<!-- 怎么画圆形 -->  
-                            canvasContent.stroke();                     <!-- 下笔画 -->  
-                        }  
-                        else{   <!-- 若圆形的半径超过ro，则画rgba(105,105,105,"+this.a+")的圆 -->  
-                            canvasContent.strokeStyle="rgba(105,105,105,"+this.a+")";  
-                            canvasContent.beginPath();  
-                            canvasContent.arc(this.x,this.y,this.r,0,Math.PI*2);  
-                            canvasContent.stroke();  
-                        }  
-                          
-                    }  
-                      
-                },  
-                <!--雨滴的移动-->  
-                move:function(){  
-                    if(this.y < this.h){ <!--若雨滴未落地-->  
-                        this.y+=this.v;     <!--雨滴继续下降 -->  
-                    }  
-                    else{                   <!--若雨滴落地 -->  
-                        if(this.a >  0.02){      <!-- 若透明度大于0.02-->  
-                            this.r+=this.vr;    <!-- 空心圆（涟漪）的半径开始增大-->  
-                            this.a *=this.va;   <!-- 透明度开始变小-->  
-                        }  
-                        else{                   <!-- 若透明度已经小于0.02-->  
-                            this.init();        <!-- 重置雨滴所有属性，即回到天上重新掉落-->  
-                        }  
-                    }  
-                    this.draw();                <!-- 雨滴移动过后，要重新绘制一次-->  
-                }  
-            }  
-              
-            <!-- 逻辑代码-->  
-            var rainArray=[];       <!--用一个列表记录所有雨滴 -->  
-            function createRain(){  <!--创建雨滴函数 -->  
-                var rain = new Rain();<!-- 创建雨滴对象-->  
-                rain.init();            <!--配置雨滴的属性 -->  
-                rain.draw();            <!--绘制雨滴（开始掉落） -->  
-                rainArray.push(rain);   <!-- 把新创建的雨滴加入到列表中-->  
-            }  
-              
-            function moveRain(){        <!--移动雨滴 -->  
-                canvasContent.fillStyle="rgba(0,0,0,0.01)";<!--绘制透明度0.01的黑色布-->  
-                canvasContent.fillRect(0,0,w,h);            <!--用于覆盖画布(16ms覆盖一次)，使画布上的内容颜色变淡 -->  
-                for(var k=0;k<rainArray.length;k++){     <!-- 遍历雨滴列表，使每个雨滴移动-->  
-                    rainArray[k].move();  
-                }  
-            }  
-              
-            for(var k=0;k<30;k++){               <!--共创建30个雨滴 -->  
-                setTimeout(createRain,200*k);   <!--每隔一段时间创建一个雨滴 -->  
-            }  
-              
-            function run(){  
-                moveRain();  
-                setTimeout(run,1000/60);<!-- 每16ms刷新画布（移动雨滴）-->  
-            }  
-            run();  
-				
-        </script>  
-       
-</body>
+<!--简历-->
+<div class="page-header">
+    <h1>简历 <small>求职：Java后台开发</small></h1>
+</div>
+<div class="main">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel panel-success">
+                    <div class="panel-heading">简单介绍</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">姓名：曾洋</li>
+                        <li class="list-group-item">性别：男</li>
+                        <li class="list-group-item">年龄：18</li>
+                        <li class="list-group-item">学历：本科</li>
+                        <li class="list-group-item">毕业学校：广东南方IT职业学院</li>
+                        <li class="list-group-item">专业：Java</li>
+                        <li class="list-group-item">邮箱：1187712115@qq.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">技能</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            基础：C#基础 、SSM框架 、JavaScript 、bootstrap、 
+							     Jquery、Vue 等都已熟悉并可熟练使用
+                            <br>
+                            <a href="local01.html">demo1:基于&Vue&js</a>
+                        </li>
+                        <li class="list-group-item">   
+							<h5 style="color: #8B0000;">电影购票系统</h5>					
+                            <br>
+                            <img src="20181205.png"/>
+                            <br>
+                           
+                        </li>
+                        <li class="list-group-item">
+                            <!-- 三大框架：vue学习中...react&angular待学 -->
+                        </li>
+                        <li class="list-group-item">
+                            
+                        </li>
+                        <li class="list-group-item">
+                           
+                        </li>
+                        <li class="list-group-item">
+                            开发工具：IDEA 、 eclipse
+                        </li>
+                        <li class="list-group-item">
+                           
+                        </li>
+                        <li class="list-group-item">
+                            数据库：MySQL、SQLServer 、mardb等
+                        </li>
+                        <li class="list-group-item">
+                           <!-- 前端语言：
+                            <br>
+                            php:会些跟前端相关的
+                            <br>
+                            python:待学 -->
+                        </li>
+                        <li class="list-group-item">
+                            <!-- IDE:editplus、webstorm -->
+                        </li>
+                        <!--<li class="list-group-item">
+                            IDE:editplus、webstorm
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-4">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">其他</div>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            Java背景：广东南方IT职业学院系统学习两年
+                            工作经验：暂无
+                        </li>
+                        <li class="list-group-item">
+                            未来方向：软件开发经理
+                        </li>
+                        <li class="list-group-item">
+                            想说的：希望可以和公司共同进步、茁壮成长
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+ </body>
+</html> 
+		</div>
+		<!-- <script src="js/mui.js"></script>
+		<script type="text/javascript">
+			mui.init()
+		</script> -->
+	</body>
+
 </html>
